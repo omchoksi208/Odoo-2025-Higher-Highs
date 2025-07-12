@@ -1,12 +1,18 @@
+import { useState, useEffect } from 'react';
 import { UserCircle } from 'lucide-react';
 
 const ProfileCard = ({ user }) => {
-  const isLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem('token');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    }
+  }, []);
 
   const handleRequest = () => {
     if (!isLoggedIn) {
       alert('Please login to request a swap!');
-      // You can show a popup/modal here instead
       return;
     }
     alert(`Request sent to ${user.name}`);

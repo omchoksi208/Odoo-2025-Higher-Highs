@@ -23,13 +23,15 @@ const UserProfilePage = () => {
   const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (!storedUserId) {
-      router.push('/login'); // Redirect if not logged in
-      return;
+    if (typeof window !== 'undefined') {
+      const storedUserId = localStorage.getItem('userId');
+      if (!storedUserId) {
+        router.push('/login');
+        return;
+      }
+      setUserId(storedUserId);
+      fetchUserProfile(storedUserId);
     }
-    setUserId(storedUserId);
-    fetchUserProfile(storedUserId);
   }, [router]);
 
   const fetchUserProfile = async (id) => {

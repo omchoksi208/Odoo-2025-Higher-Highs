@@ -14,8 +14,10 @@ const RegisterPage = () => {
     setError(null);
     try {
       const response = await auth.register(name, email, password);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userId', response.data.userId); // Store user ID
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.userId);
+      }
       router.push('/profile'); // Redirect to profile setup after registration
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');

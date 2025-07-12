@@ -1,9 +1,17 @@
 // components/SwapRequestCard.jsx
+import { useState, useEffect } from 'react';
 import { UserCircle } from 'lucide-react';
 
 const SwapRequestCard = ({ request, onAccept, onReject, onDelete }) => {
-  const isRequester = request.requesterId === localStorage.getItem('userId'); // Assuming userId is stored
+  const [isRequester, setIsRequester] = useState(false);
   const isPending = request.status === 'pending';
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userId = localStorage.getItem('userId');
+      setIsRequester(request.isRequester || (request.requesterId === userId));
+    }
+  }, [request]);
 
   return (
     <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 mb-6">

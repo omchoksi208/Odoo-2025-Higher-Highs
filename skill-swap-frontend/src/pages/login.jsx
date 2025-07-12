@@ -14,8 +14,10 @@ const LoginPage = () => {
     setError(null);
     try {
       const response = await auth.login(email, password);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userId', response.data.userId); // Store user ID
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.userId);
+      }
       router.push('/'); // Redirect to home on successful login
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');

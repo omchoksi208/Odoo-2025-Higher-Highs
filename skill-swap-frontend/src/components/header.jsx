@@ -9,11 +9,17 @@ const Header = () => {
   const router = useRouter();
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem('token'));
+    // Check if we're on the client side before accessing localStorage
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+    }
     setIsLoggedIn(false);
     router.push('/login');
   };

@@ -13,10 +13,12 @@ const SwapRequestsPage = () => {
   const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      router.push('/login'); // Redirect if not logged in
-      return;
+    if (typeof window !== 'undefined') {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        router.push('/login');
+        return;
+      }
     }
     fetchSwapRequests(filterStatus);
   }, [router, filterStatus]);

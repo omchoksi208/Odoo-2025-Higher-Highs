@@ -1,0 +1,19 @@
+{
+  "name": "skill-swap-platform",
+  "version": "1.0.0",
+  "description": "A skill swap platform for exchanging skills between users",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd skill-swap-frontend && npm run dev",
+    "install-all": "npm install && cd backend && npm install && cd ../skill-swap-frontend && npm install",
+    "build": "cd skill-swap-frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": ["skill-swap", "platform", "exchange", "skills"],
+  "author": "Your Name",
+  "license": "MIT"
+}

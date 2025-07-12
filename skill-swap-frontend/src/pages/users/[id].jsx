@@ -41,13 +41,15 @@ const UserPublicProfilePage = () => {
   };
 
   const fetchCurrentUserSkills = async () => {
-    const loggedInUserId = localStorage.getItem('userId');
-    if (loggedInUserId) {
-      try {
-        const response = await users.getUserProfile(loggedInUserId);
-        setCurrentUserSkills(response.data.skillsOffered || []);
-      } catch (err) {
-        console.error("Failed to fetch current user's skills:", err);
+    if (typeof window !== 'undefined') {
+      const loggedInUserId = localStorage.getItem('userId');
+      if (loggedInUserId) {
+        try {
+          const response = await users.getUserProfile(loggedInUserId);
+          setCurrentUserSkills(response.data.skillsOffered || []);
+        } catch (err) {
+          console.error("Failed to fetch current user's skills:", err);
+        }
       }
     }
   };
@@ -58,31 +60,33 @@ const UserPublicProfilePage = () => {
     setRequestError(null);
     setRequestSuccess(null);
 
-    const loggedInUserId = localStorage.getItem('userId');
-    if (!loggedInUserId) {
-      setRequestError('You must be logged in to send a swap request.');
-      setIsSendingRequest(false);
-      return;
+    if (typeof window !== 'undefined') {
+      const loggedInUserId = localStorage.getItem('userId');
+      if (!loggedInUserId) {
+        setRequestError('You must be logged in to send a swap request.');
+        setIsSendingRequest(false);
+        return;
+      }
+
+      try {
+        await swapRequests.createRequest({
+          accepterId: id,
+          requesterOfferedSkill,
+          accepterWantedSkill,
+          message,
+        });
+        setRequestSuccess('Swap request sent successfully!');
+        setShowRequestModal(false);
+        setRequesterOfferedSkill('');
+        setAccepterWantedSkill('');
+        setMessage('');
+      } catch (err) {
+        setRequestError(err.response?.data?.message || 'Failed to send swap request.');
+      } finally {
+        setIsSendingRequest(false);
+      }
     }
 
-    try {
-      await swapRequests.createRequest({
-        requesterId: loggedInUserId,
-        accepterId: id,
-        requesterOfferedSkill,
-        accepterWantedSkill,
-        message,
-      });
-      setRequestSuccess('Swap request sent successfully!');
-      setShowRequestModal(false);
-      setRequesterOfferedSkill('');
-      setAccepterWantedSkill('');
-      setMessage('');
-    } catch (err) {
-      setRequestError(err.response?.data?.message || 'Failed to send swap request.');
-    } finally {
-      setIsSendingRequest(false);
-    }
   };
 
   if (isLoading) {
